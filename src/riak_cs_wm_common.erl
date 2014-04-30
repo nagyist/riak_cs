@@ -476,11 +476,12 @@ post_authentication({error, notfound}, RD, Ctx, _, _) ->
     %% failing in some better way.
     _ = lager:debug("key_id not present or not found"),
     riak_cs_wm_utils:deny_access(RD, Ctx);
-post_authentication({error, Reason}, RD, Ctx, _, _) ->
+post_authentication({error, Reason}=Error, RD,
+                    Ctx=#context{response_module=RespMod},
+                    _, _) ->
     %% no matching keyid was found, or lookup failed
     _ = lager:debug("Authentication error: ~p", [Reason]),
-    riak_cs_wm_utils:deny_invalid_key(RD, Ctx).
-
+    RespMod:api_error(Error, RD, Ctx).
 
 %% ===================================================================
 %% Resource function defaults

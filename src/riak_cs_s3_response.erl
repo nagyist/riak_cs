@@ -64,6 +64,7 @@ error_message(no_such_bucket) ->
     "The specified bucket does not exist.";
 error_message({riak_connect_failed, Reason}) ->
     io_lib:format("Unable to establish connection to Riak. Reason: ~p", [Reason]);
+error_message(disconnected) -> "Disconnected by Riak.";
 error_message(admin_key_undefined) -> "Please reduce your request rate.";
 error_message(admin_secret_undefined) -> "Please reduce your request rate.";
 error_message(bucket_owner_unavailable) -> "The user record for the bucket owner was unavailable. Try again later.";
@@ -103,6 +104,7 @@ error_code(invalid_user_update) -> "InvalidUserUpdate";
 error_code(no_such_bucket) -> "NoSuchBucket";
 error_code(no_such_key) -> "NoSuchKey";
 error_code({riak_connect_failed, _}) -> "RiakConnectFailed";
+error_code(disconnected) -> "RiakConnectFailed";
 error_code(admin_key_undefined) -> "ServiceUnavailable";
 error_code(admin_secret_undefined) -> "ServiceUnavailable";
 error_code(bucket_owner_unavailable) -> "ServiceUnavailable";
@@ -146,6 +148,7 @@ status_code(invalid_user_update) -> 400;
 status_code(no_such_bucket) -> 404;
 status_code(no_such_key) -> 404;
 status_code({riak_connect_failed, _}) -> 503;
+status_code(disconnected) -> 503;
 status_code(admin_key_undefined) -> 503;
 status_code(admin_secret_undefined) -> 503;
 status_code(bucket_owner_unavailable) -> 503;

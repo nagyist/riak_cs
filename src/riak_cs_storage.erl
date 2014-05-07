@@ -101,6 +101,7 @@ object_size_map({error, notfound}, _, _) ->
     [];
 object_size_map(Object, _, _) ->
     try
+        %% TODO: Should filter out tombstoned ones
         AllManifests = [ binary_to_term(V)
                          || V <- riak_object:get_values(Object) ],
         Resolved = riak_cs_manifest_resolution:resolve(AllManifests),
@@ -111,7 +112,16 @@ object_size_map(Object, _, _) ->
             _ ->
                 [{MPparts, MPbytes}]
         end
-    catch _:_ ->
+    catch Type:Reason ->
+            ST = erlang:get_stacktrace(),
+            _ = lager:log(error,
+                          self(),
+                          "Riak CS object size map failed for ~p:~p with reason ~p:~p ~p",
+                          [riak_object:bucket(Object),
+                           riak_object:key(Object),
+                           Type,
+                           Reason,
+                           ST]),
             []
     end.
 

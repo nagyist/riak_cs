@@ -23,6 +23,7 @@
 -export([init/1,
          authorize/2,
          content_types_provided/2,
+         multiple_choices/2,
          generate_etag/2,
          last_modified/2,
          produce_body/2,
@@ -128,6 +129,9 @@ content_types_provided(RD, Ctx=#context{local_context=LocalCtx,
             %% appease webmachine
             {[{"text/plain", produce_body}], RD, Ctx}
     end.
+
+multiple_choices(RD, Ctx) ->
+    {false, RD, Ctx}.
 
 -spec generate_etag(#wm_reqdata{}, #context{}) -> {string(), #wm_reqdata{}, #context{}}.
 generate_etag(RD, Ctx=#context{local_context=LocalCtx}) ->

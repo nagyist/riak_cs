@@ -53,7 +53,8 @@
               object_head,
               object_delete,
               object_get_acl,
-              object_put_acl]).
+              object_put_acl,
+              wm_common_forbidden]).
 
 %% ====================================================================
 %% API

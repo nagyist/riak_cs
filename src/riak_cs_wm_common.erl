@@ -154,6 +154,7 @@ forbidden(RD, Ctx=#context{auth_module=AuthMod,
                            submodule=Mod,
                            riak_client=RcPid,
                            exports_fun=ExportsFun}) ->
+Start = os:timestamp(),
     {AuthResult, AnonOk} =
         case AuthMod:identify(RD, Ctx) of
             {UserKey, AuthData} ->
@@ -180,6 +181,7 @@ forbidden(RD, Ctx=#context{auth_module=AuthMod,
                                         <<"forbidden">>, [],
                                         [riak_cs_wm_utils:extract_name(Ctx2#context.user),
                                          <<"false">>]),
+    ok = riak_cs_stats:update_with_start(wm_common_forbidden, Start),
             FalseRet;
         {Rsn, _RD2, Ctx2} = Ret ->
             Reason =
